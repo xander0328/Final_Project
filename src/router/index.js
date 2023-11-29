@@ -1,11 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Admin from '../views/Admin.vue'
+import clerk from '../views/Clerk.vue'
 
 const routes = [
   {
-    path: '/admin',
-    name: 'admin',
-    component: Admin
+    path: '/clerk',
+    component: clerk,
+  },
+  {
+    path: '/clerk/view_client',
+    component: () => import('../views/ViewClient.vue')
+  },
+  {
+    path: '/messages',
+    component: () => import('../views/Messages.vue')
   },
 ]
 
