@@ -14,6 +14,10 @@ const routes = [
     path: '/messages',
     component: () => import('../views/Messages.vue')
   },
+  {
+    path: '/client',
+    component: () => import('../views/Client.vue')
+  },
 ]
 
 const router = createRouter({

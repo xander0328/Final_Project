@@ -4,7 +4,7 @@
             <v-toolbar-title>Tasks</v-toolbar-title>
         </v-toolbar>
         <div>
-            <v-tabs v-model="tab" color="green-darken-4">
+            <v-tabs v-model="tab" fixed-tabs color="green-darken-4">
                 <v-tab value="option-1">
                     <v-icon start>
                         mdi-account

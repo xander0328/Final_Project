@@ -11,18 +11,21 @@
                         <div v-for="info in info">{{ info.fname + ' ' + info.lname }}</div>
                         <div class="text-body-2">Client Name</div>
                     </v-toolbar-title>
-                    <v-btn v-for="info in info" @click="approve(info.acc_id, 'true', 'Account is approved')" class="rounded-lg me-2" color="light-green-darken-1" variant="flat"
+                    <v-btn v-for="info in info" @click="approve(info.acc_id, 'true', 'Account is approved')"
+                        class="rounded-lg me-2" color="light-green-darken-1" variant="flat"
                         prepend-icon="mdi mdi-check-circle-outline">
                         Approve
                     </v-btn>
-                    <v-btn v-for="info in info" @click="approve(info.acc_id, 'false', 'Account is declined')" class="rounded-lg" color="red-lighten-1" variant="flat" prepend-icon="mdi mdi-cancel">
+                    <v-btn v-for="info in info" @click="approve(info.acc_id, 'false', 'Account is declined')"
+                        class="rounded-lg" color="red-lighten-1" variant="flat" prepend-icon="mdi mdi-cancel">
                         Decline
                     </v-btn>
                 </v-toolbar>
 
-                <div class="ma-5"><div :class="{'d-flex' : isDesktop}">
-                        <v-col :cols="{'5' : !isDesktop}" v-for="info in info">
-                            <v-card elevation="3" class="mx-auto" title="Data Input">
+                <div class="ma-5">
+                    <div :class="{ 'd-flex': isDesktop }">
+                        <v-col :cols="{ '5': !isDesktop }" v-for="info in info">
+                            <v-card elevation="3" class="mx-auto mb-3" title="Data Input">
                                 <v-card-text>
                                     <v-container>
                                         <v-row class="text-center" align="center" justify="center"><v-col>
@@ -71,8 +74,7 @@
 
                                 </v-card-text>
                             </v-card>
-                        </v-col>
-                        <v-col v-for="info in info">
+
                             <v-card elevation="3" title="Identification Card">
                                 <v-card-text>
                                     <v-container v-for="(img, index) in imgsRef" :key="index">
@@ -87,7 +89,41 @@
 
                                 </v-card-text>
                             </v-card>
-                        </v-col></div>
+                        </v-col>
+
+                        <v-col>
+                            <v-card class="h-100" elevation="3" title="Client Timeline">
+                                <v-card-text>
+                                    <v-col>
+                                        <v-timeline density="compact" side="end">
+                                            <v-timeline-item v-for="time in timeline" class="mb-4" dot-color="green"
+                                                size="small">
+                                                <div class="d-flex justify-space-between flex-grow-1">
+
+                                                    <div>
+                                                        <v-chip class="ms-0 me-2"
+                                                            v-bind:color="time.type === 'success' ? 'green' : 'red'" label
+                                                            size="small">
+                                                            {{ time.type === 'success' ? 'Success' : 'Failed' }}
+                                                        </v-chip>
+                                                        <span class="me-2">{{ time.date }}</span>
+                                                        <div>
+                                                            <strong>{{ time.phase }}</strong>
+                                                        </div>
+                                                        <div class="text-caption">
+                                                            {{ time.message }}
+                                                        </div>
+                                                        <!-- <strong class="ms-4 mb-0">{{ time.date }}</strong> -->
+                                                    </div>
+                                                </div>
+                                            </v-timeline-item>
+                                        </v-timeline>
+                                    </v-col>
+
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                    </div>
                 </div>
 
             </v-card>
@@ -115,6 +151,7 @@ export default {
             isDesktop: false,
             tab: 'option-1',
             info: [],
+            timeline: [],
         }
     },
     mounted() {
@@ -141,7 +178,9 @@ export default {
             const d = await axios.post('getClientData', {
                 id: sessionStorage.getItem('id')
             });
-            this.info = d.data;
+            this.info = d.data.data.client;
+            this.timeline = d.data.data.timeline;
+            console.log(this.info);
         },
         isActive(route) {
             return this.$route.path === route;
