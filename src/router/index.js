@@ -3,6 +3,18 @@ import clerk from '../views/Clerk.vue'
 
 const routes = [
   {
+    path: '/',
+    component: () => import('../views/Login.vue')
+  },
+  {
+    path: '/verify_email',
+    component: () => import('../views/VerifyEmail.vue')
+  },
+  {
+    path: '/client_info',
+    component: () => import('../views/ClientInfo.vue')
+  },
+  {
     path: '/clerk',
     component: clerk,
   },

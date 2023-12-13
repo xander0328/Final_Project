@@ -31,7 +31,8 @@
                     <v-card><v-card-text>
                             <v-skeleton-loader :loading="loading" v-for="verify in verify" type="list-item-avatar">
                                 <v-row no-gutter><v-col class="mb-2"><v-card elevation="5" class="mx-auto"
-                                            :title="verify.fname + ' ' + verify.lname" v-bind:prepend-avatar="image">
+                                            :title="verify.fname + ' ' + verify.lname"
+                                            v-bind:prepend-avatar="verify.profile">
                                             <template v-slot:append>
                                                 <v-card-actions @click="viewClient(verify.id)">
                                                     <v-btn>Review</v-btn>
@@ -80,24 +81,25 @@ export default {
             image: 'client_files/download.jpg',
         }
     },
-    mounted() {
+    async mounted() {
         setTimeout(() => {
             this.loading = false;
             console.log('myVariable is now false.');
         }, 1000);
+        this.interval = setInterval(async () => { await this.getInfo(); }, 3000);
+
         this.isDesktop = this.updateBreakpoint();
         window.addEventListener('resize', this.onResize);
 
-        //firebase
-        getDownloadURL(ref(storage, this.image)).then(
-            (download_url) =>(this.image = download_url)
-        )
+
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.onResize);
+        clearInterval(this.interval);
     },
     created() {
         this.getInfo();
+
     },
     methods: {
         async viewClient(data) {
@@ -107,7 +109,18 @@ export default {
         async getInfo() {
             try {
                 const inf = await axios.get('getClerkTask');
-                this.verify = inf.data.verify;
+                
+
+                if(this.verify.length != inf.data.verify.length){
+                    this.verify = inf.data.verify
+                    for (let img of this.verify) {
+                    getDownloadURL(ref(storage, img.profile)).then(
+                        (download_url) => (img.profile = download_url)
+                    )
+                }
+                }
+                
+                
             } catch (error) {
                 console.log(error);
             }

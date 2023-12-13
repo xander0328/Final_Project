@@ -12,19 +12,19 @@
                 <v-menu open-on-hoverv-model="menu" :close-on-content-click="false" location="bottom">
                     <template v-slot:activator="{ props }">
                         <v-btn v-bind="props" icon>
-                            <v-avatar image="https://randomuser.me/api/portraits/women/85.jpg"></v-avatar>
+                            <v-avatar :image="profile"></v-avatar>
                         </v-btn>
                     </template>
 
                     <v-list class="text-left">
-                        <v-list-item title="Jenny Lim" subtitle="Clerk" value="profile">
+                        <v-list-item :title="name" :subtitle="role" value="profile">
                             <template v-slot:prepend>
                                 <v-icon color="success" icon="mdi mdi-account-circle" size="x-large"></v-icon>
                             </template>
                         </v-list-item>
 
                         <v-list-item value="logout">
-                            <v-list-item-title class="text-body-2">Logout</v-list-item-title>
+                            <v-list-item-title >Logout</v-list-item-title>
                             <template v-slot:prepend>
                                 <v-icon color="error" icon="mdi mdi-logout-variant" size="x-large"></v-icon>
                             </template>
@@ -36,21 +36,39 @@
     </v-app-bar>
 </template>
 <script>
+import axios from 'axios'
+import { storage } from '@/firebase';
+import { ref, getDownloadURL } from 'firebase/storage';
 export default {
     name: "appBar",
     data() {
         return {
             isDesktop: false,
+            role: '',
+            profile: '',
+            name: '',
         }
     },
     mounted() {
         this.isDesktop = this.updateBreakpoint();
         window.addEventListener('resize', this.onResize);
+        this.checkAccount();
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.onResize);
     },
     methods: {
+        async checkAccount() {
+            const d = await axios.post('check_navbar', {
+                token: sessionStorage.getItem('token')
+            });
+            this.role = d.data.role.toUpperCase();
+            this.name = d.data.name;
+
+            getDownloadURL(ref(storage, d.data.profile)).then(
+                (download_url) => (this.profile = download_url)
+            )
+        },
         updateBreakpoint() {
             return document.documentElement.clientWidth > 800;
         },

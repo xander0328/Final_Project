@@ -25,7 +25,7 @@
                 <div class="ma-5">
                     <div :class="{ 'd-flex': isDesktop }">
                         <v-col :cols="{ '5': !isDesktop }" v-for="info in info">
-                            <v-card elevation="3" class="mx-auto mb-3" title="Data Input">
+                            <v-card elevation="3" class=" mx-auto mb-3" title="Data Input">
                                 <v-card-text>
                                     <v-container>
                                         <v-row class="text-center" align="center" justify="center"><v-col>
@@ -75,7 +75,7 @@
                                 </v-card-text>
                             </v-card>
 
-                            <v-card elevation="3" title="Identification Card">
+                            <v-card  elevation="3" title="Identification Card">
                                 <v-card-text>
                                     <v-container v-for="(img, index) in imgsRef" :key="index">
                                         <v-row align="center" justify="center">
@@ -92,7 +92,7 @@
                         </v-col>
 
                         <v-col>
-                            <v-card class="h-100" elevation="3" title="Client Timeline">
+                            <v-card class="overflow-auto" elevation="3" title="Client Timeline">
                                 <v-card-text>
                                     <v-col>
                                         <v-timeline density="compact" side="end">
